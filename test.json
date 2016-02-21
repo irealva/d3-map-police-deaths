@@ -1,0 +1,38 @@
+{
+    "type": "FeatureCollection",
+
+    "features": [{
+        "type": "Feature",
+         "transform": { "scale": [0.009448200790079008, 0.004516796769676968], "translate": [-161.7558333, 19.6639764] },
+        "properties": { "NAME": "Alberta", "CODE": "CA01" },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [8463, 1081]
+        }
+    }, 
+    {
+        "type": "Feature",
+        "transform": { "scale": [0.009448200790079008, 0.004516796769676968], "translate": [-161.7558333, 19.6639764] },
+        "properties": { "NAME": "Alberta", "CODE": "CA01" },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [633, 56]
+        }
+    },
+    {
+        "type": "Feature",
+        "transform": { "scale": [0.009448200790079008, 0.004516796769676968], "translate": [-161.7558333, 19.6639764] },
+        "properties": { "NAME": "Alberta", "CODE": "CA01" },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [559, 271]
+        }
+    }
+
+
+
+
+
+
+    ]
+}

@@ -19,6 +19,32 @@
   stroke-linecap: round;
 }
 
+/*
+.points {
+        fill: #000;
+        stroke: #fff;
+        stroke-width: 1px;
+}
+*/
+
+.points:hover {
+        fill: #666;
+    }
+
+.hidden {
+    display: none;
+}
+div.tooltip {
+    color: #222;
+    background-color: #fff;
+    padding: .5em;
+    text-shadow: #f5f5f5 0 1px 0;
+    border-radius: 2px;
+    opacity: 0.9;
+    position: absolute;
+    z-index:1000;
+}
+
 </style>
 <body>
 <script src="//d3js.org/d3.v3.min.js"></script>
@@ -28,6 +54,9 @@
 
 var width = 960,
     height = 500;
+
+var tooltip = d3.select('body').append('div')
+    .attr('class', 'hidden tooltip');
 
 var projection = d3.geo.albersUsa()
     .scale(1070)
@@ -40,12 +69,17 @@ var path = d3.geo.path()
 var zoom = d3.behavior.zoom()
     .translate([0, 0])
     .scale(1)
-    .scaleExtent([1, 16])
+    .scaleExtent([1, 50])
     .on("zoom", zoomed);
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height) ;
+    
+
+    //.on('mousemove', function(d) {
+    //  console.log("ok") ;
+    //}) ;
 
 var features = svg.append("g");
 
@@ -57,9 +91,8 @@ svg.append("rect")
 
 queue()
     .defer(d3.json, "us.json")
-    .defer(d3.json, "airports.json")
+    .defer(d3.json, "last.json")
     .await(ready);
-
 
 function ready(error, us, airports) {
   if (error) throw error;
@@ -81,11 +114,153 @@ function ready(error, us, airports) {
       .attr("d", path)
       .style("stroke-width", ".5px");
 
-  features.append("path")
+      //debugger ;
+      //debugger;
+
+      var provinces = features.selectAll('.points')
+                .data( topojson.feature(airports, airports.objects.counties).features)
+                .enter();
+
+  //debugger ;
+
+
+      provinces.append('path')
+                .attr('class', function(d) {
+                    return 'points';
+                })
+                .attr('d', path)
+                .attr("transform", function(d) { return "translate(" + d + ")"; }) 
+                .on('mousemove', function(d) {
+                    var mouse = d3.mouse(svg.node()).map(function(d) {
+                        return parseInt(d);
+                    });
+                    tooltip.classed('hidden', false)
+                        .attr('style', 'left:' + (mouse[0] + 15) +
+                                'px; top:' + (mouse[1] - 35) + 'px')
+                        .html(d.properties.NAME);
+                })
+                .on('mouseout', function() {
+                    tooltip.classed('hidden', true);
+                });
+  
+
+      /*
+      features.append('g')
+        .selectAll('path')
+        .data( topojson.feature(airports, airports.objects.counties).features)
+        .enter() 
+        .append('path')
+        .attr( "d", path )
+        .attr('class','points') ;*/
+        
+
+
+      //var listpoints = features.selectAll('.points').data(airports.objects.airports).enter();
+
+      //var listpoints = features.selectAll('.points').data(topojson.feature(airports, airports.objects.airports)).enter() ;
+
+      /* WORKS
+      features.append("path")
       .datum(topojson.feature(airports, airports.objects.airports))
       .attr("class", "points")
-      .attr("d", path);
+      .attr("d", path); */
+
+
+      /*
+    features.append("path")
+      .datum(topojson.feature(airports.objects.airports))
+      .attr("class", "points")
+      .attr("d", path) ;*/
+
+      //debugger ;
+
+   //var listpoints = features.selectAll('.points').data(airports.objects.example.geometries).enter();
+   
+   //var listpoints = features.selectAll('.points').data(airports.objects.example.geometries).enter();
+    //console.log(listpoints);
+
+/*
+    var listpoints = features.selectAll('.points').data(topojson.feature(airports, airports.objects.airports)).enter() ;
+
+
+    listpoints.append("path")
+                .attr('class', function(d) {
+                    return 'points';
+                })
+                .attr('d', path)
+                .on('mousemove', function(d) {
+                    console.log("mouseover!") ;
+                    var mouse = d3.mouse(svg.node()).map(function(d) {
+                        return parseInt(d);
+                    });
+                    tooltip.classed('hidden', false)
+                        .attr('style', 'left:' + (mouse[0] + 15) +
+                                'px; top:' + (mouse[1] - 35) + 'px')
+                        .html(d.properties.NAME);
+                })
+                .on('mouseout', function() {
+                    tooltip.classed('hidden', true);
+                });*/
+  
+
+  //ready3(airports) ;
+
 }
+
+function ready3(airports) {
+
+ console.log("in ready 3") ;
+
+ debugger ;
+
+
+/*
+ features.append("path")
+      .datum(topojson.feature(airports, airports.objects.airports))
+      .attr("class", "points")
+      .attr("d", path)
+      .on('mousemove', function(d) {
+                  console.log("mousemove") ;
+                      var mouse = d3.mouse(svg.node()).map(function(d) {
+                          return parseInt(d);
+                      });
+                      tooltip.classed('hidden', false)
+                          .attr('style', 'left:' + (mouse[0] + 15) +
+                                  'px; top:' + (mouse[1] - 35) + 'px')
+                          .html(d.properties.NAME);
+                  })
+                  .on('mouseout', function() {
+                      tooltip.classed('hidden', true);
+                  });*/
+
+  //passThruEvents(d3.select('g'))
+
+  //passThruEvents(d3.select('g'))
+
+/*
+ var thepoints = svg.selectAll('.points')
+        .data(airports.sobjects.airports).enter();
+
+
+  thepoints.append('path')
+    .on('mousemove', function(d) {
+      console.log("mousemove") ;
+                    var mouse = d3.mouse(svg.node()).map(function(d) {
+                        return parseInt(d);
+                    });
+                    tooltip.classed('hidden', false)
+                        .attr('style', 'left:' + (mouse[0] + 15) +
+                                'px; top:' + (mouse[1] - 35) + 'px')
+                        .html(d.properties.NAME);
+                })
+                .on('mouseout', function() {
+                    tooltip.classed('hidden', true);
+                });*/
+
+
+}
+
+
 
 
 /*
@@ -121,11 +296,34 @@ d3.json("airports.json", function(error, airports) {
 });
 */
 
+function passThruEvents(g) {
+    g.on('mousemove.passThru', passThru)
+      .on('mousedown.passThru', passThru)
+    ;
+
+    function passThru(d) {
+        var e = d3.event;
+
+        var prev = this.style.pointerEvents;
+        this.style.pointerEvents = 'none';
+
+        var el = document.elementFromPoint(d3.event.x, d3.event.y);
+
+        var e2 = document.createEvent('MouseEvent');
+        e2.initMouseEvent(e.type,e.bubbles,e.cancelable,e.view, e.detail,e.screenX,e.screenY,e.clientX,e.clientY,e.ctrlKey,e.altKey,e.shiftKey,e.metaKey,e.button,e.relatedTarget);
+
+        el.dispatchEvent(e2);
+
+        this.style.pointerEvents = prev;
+    }
+}
+
 function zoomed() {
   features.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   features.select(".state-border").style("stroke-width", 1.5 / d3.event.scale + "px");
   features.select(".county-border").style("stroke-width", .5 / d3.event.scale + "px");
 }
+
 
 d3.select(self.frameElement).style("height", height + "px");
 
